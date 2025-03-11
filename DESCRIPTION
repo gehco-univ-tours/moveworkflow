@@ -1,11 +1,13 @@
-Package: moveworkflow
 Type: Package
-Title: What the Package Does (Title Case)
+Package: moveworkflow
+Title: MOVE processing data files package
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Description: It compil, prepare and calculate metrique for MOVE project
+License: GPL (>= 3)
+Author@R:person("William", "Lefranc", , "william.lefranc@univ-tours.fr",
+    role = c("aut", "cre"))
 Encoding: UTF-8
 LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+RoxygenNOTE: 7.2.3
