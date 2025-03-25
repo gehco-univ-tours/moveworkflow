@@ -11,7 +11,7 @@
 #' type_files(file)
 
 type_files <- function(type_file){
-  carac_file <- list()
+  feature_file <- list()
   if(type_file == "CSV"){
     header <- TRUE
     separator <- ";"
@@ -31,12 +31,12 @@ type_files <- function(type_file){
   }else{
     print("type_file not found")
   }
-  carac_file[["header"]] <- header
-  carac_file[["separator"]] <- separator
-  carac_file[["skiprows_max"]] <- skiprows_max
-  carac_file[["decimal"]] <- decimal
-  carac_file[["encoding"]] <- encoding
-  carac_file[["name_datetime"]] <- name_datetime
-  carac_file[["col_name"]] <- col_name
-  return(carac_file)
+  feature_file[["header"]] <- header
+  feature_file[["separator"]] <- separator
+  feature_file[["skiprows_max"]] <- skiprows_max
+  feature_file[["decimal"]] <- decimal
+  feature_file[["encoding"]] <- encoding
+  feature_file[["name_datetime"]] <- name_datetime
+  feature_file[["col_name"]] <- col_name
+  return(feature_file)
 }
