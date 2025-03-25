@@ -2,10 +2,15 @@ Type: Package
 Package: moveworkflow
 Title: MOVE processing data files package
 Version: 0.1.0
+Authors@R: 
+    person("William", "Lefranc", , "william.lefranc@univ-tours.fr", role = c("aut", "cre"))
 Description: It compil, prepare and calculate metrique for MOVE project
 License: GPL (>= 3)
-Author@R:person("William", "Lefranc", , "william.lefranc@univ-tours.fr",
-    role = c("aut", "cre"))
+Depends: 
+    R (>= 3.5)
+Imports: 
+    lubridate,
+    magrittr
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
