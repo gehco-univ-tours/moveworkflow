@@ -7,14 +7,11 @@
 #' @importFrom lubridate ymd_hms
 #' @importFrom lubridate dmy_hm
 #' @importFrom lubridate dmy_hms
-#' @importFrom base grep
-#' @importFrom base any
 #' @export
 #'
 #' @examples
 #' date <- c("03/12/24 14:50:01", "03/12/24 14:50:12", "03/12/24 14:50:24")
 #' convert_date_posixct(date)
-
 convert_date_posixct <- function(date){
   if (any(grepl("^\\d{4}/\\d{2}/\\d{2} \\d{2}:\\d{2}:\\d{2}$", date))) {
     posix_date <- ymd_hms(date)

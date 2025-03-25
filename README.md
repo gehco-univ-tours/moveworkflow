@@ -13,16 +13,21 @@ The goal of moveworkflow is to …
 You can install the development version of moveworkflow from
 [GitHub](https://github.com/) with:
 
-``` r
-install.packages("pak")
-pak::pak("gehco-univ-tours/moveworkflow")
-```
-
 ## Convert date to posixct
 
 function to convert date found in row data of MOVE project in posixct
 
 ``` r
 date <- c("03/12/24 14:50:01", "03/12/24 14:50:12", "03/12/24 14:50:24")
-convert_date_posixct <- function(date)
+convert_date_posixct(date)
+```
+
+## Types_file
+
+a function which allows to set preset parameters when download
+rowdataframe
+
+``` r
+file <- "txt"
+type_files(file)
 ```

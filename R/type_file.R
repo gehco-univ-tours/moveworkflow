@@ -4,8 +4,6 @@
 #' @param type_file two choice, "txt" or "CSV"
 #'
 #' @return a list of preset files parameters
-#' @importFrom base list
-#' @importFrom base c
 #' @export
 #'
 #' @examples

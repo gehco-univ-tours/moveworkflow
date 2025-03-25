@@ -4,7 +4,7 @@ Title: MOVE processing data files package
 Version: 0.1.0
 Authors@R: 
     person("William", "Lefranc", , "william.lefranc@univ-tours.fr", role = c("aut", "cre"))
-Description: It compil, prepare and calculate metrique for MOVE project
+Description: It compil prepare and calculate metrique for MOVE project.
 License: GPL (>= 3)
 Depends: 
     R (>= 3.5)
