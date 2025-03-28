@@ -4,3 +4,5 @@
 ^dev$
 ^data-raw$
 ^README\.Rmd$
+^inst\data_ext
+

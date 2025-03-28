@@ -13,6 +13,14 @@ The goal of moveworkflow is to …
 You can install the development version of moveworkflow from
 [GitHub](https://github.com/) with:
 
+``` r
+directory <- system.file("data_ext","data_raw","A_1_diver",package="moveworkflow", mustWork=TRUE)
+file <- "CSV"
+feature_file <- type_files(file)
+type_file ="CSV"
+combine_files(directory, "CSV")
+```
+
 ## Convert date to posixct
 
 function to convert date found in row data of MOVE project in posixct
@@ -22,12 +30,9 @@ date <- c("03/12/24 14:50:01", "03/12/24 14:50:12", "03/12/24 14:50:24")
 convert_date_posixct(date)
 ```
 
-## Types_file
-
-a function which allows to set preset parameters when download
-rowdataframe
+## Add_time_if_missing
 
 ``` r
-file <- "txt"
-type_files(file)
+date <- c("2024-12-03 14:50:01", "2024-12-03", "2024-12-03 14:50:24")
+lapply(date, add_time_if_missing)
 ```
