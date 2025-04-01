@@ -19,7 +19,7 @@ type_files <- function(type_file){
     decimal <- ","
     encoding <- "latin1"
     name_datetime = "Date.time"
-    col_name <- c("date_time", "level_cm", "temp_c")
+    col_name <- c("date_time", "level_cm", "temp_c","id_sensor")
   }else if(type_file == "txt"){
     header <- TRUE
     separator <- ";"
@@ -28,7 +28,16 @@ type_files <- function(type_file){
     decimal <- "."
     encoding <- "UFT-8"
     name_datetime <- "Date.Heure..GMT.01.00"
-    col_name <- c("row_name", "date_time", "value")
+    col_name <- c("row_name", "date_time", "value","id_sensor")
+  }else if(type_file == "csv"){
+    header <- TRUE
+    separator <- ";"
+    skiprows_max <- 0
+    last_row <- 0
+    decimal <- "."
+    encoding <- "latin1"
+    name_datetime <- "date_time"
+    col_name <- c()
   }else{
     print("type_file not found")
   }

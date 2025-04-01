@@ -19,6 +19,8 @@ convert_date_posixct <- function(date){
     posix_date <- dmy_hm(date)
   } else if (any(grepl("^\\d{2}/\\d{2}/\\d{2} \\d{2}:\\d{2}:\\d{2}$", date))) {
     posix_date <- dmy_hms(date)
+  } else if (any(grepl("^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$", date))){
+    posix_date <- ymd_hms(date)
   }else {
     posix_date <- "failed to transforme"
   }
