@@ -7,6 +7,7 @@
 #' @return a dataframe of combined files
 #' @importFrom dplyr arrange
 #' @importFrom dplyr sym
+#' @importFrom dplyr bind_rows
 #' @export
 #'
 combine_files <- function (directory, type_file){
@@ -26,7 +27,7 @@ combine_files <- function (directory, type_file){
       file_list <- append(file_list, list(data_file))
     }
     if (length(file_list) > 0){
-      compiled_data <- do.call(rbind, file_list)
+      compiled_data <- do.call(bind_rows, file_list)
       compiled_data <- compiled_data %>%
       arrange(!!sym(feature_file$name_datetime))
     }else{

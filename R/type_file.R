@@ -26,7 +26,7 @@ type_files <- function(type_file){
     skiprows_max <- 1
     last_row <- 0
     decimal <- "."
-    encoding <- "UFT-8"
+    encoding <- "latin1"
     name_datetime <- "Date.Heure..GMT.01.00"
     col_name <- c("row_name", "date_time", "value","id_sensor")
   }else if(type_file == "csv"){

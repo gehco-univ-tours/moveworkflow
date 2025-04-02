@@ -27,79 +27,66 @@ You can install the development version of moveworkflow from [GitHub](https://gi
 
 ``` {r eval= FALSE}
 ## Combined diver
+feature_file <- type_files("CSV")
+save_directory <-system.file("data_ext","data_compile","diver",package="moveworkflow", mustWork=TRUE)
 #A_1
 directory <- system.file("data_ext","data_raw","A_1_diver",package="moveworkflow", mustWork=TRUE)
-feature_file <- type_files("CSV")
 data_combine <- combine_files(directory, "CSV") %>% 
   dplyr::select(1:4) %>% 
   dplyr::rename_with(~feature_file$col_name, everything()) %>% 
   dplyr::distinct(date_time, .keep_all = TRUE) %>% 
   dplyr::arrange(date_time)
-save_directory <-system.file("data_ext","data_compile","diver",package="moveworkflow", mustWork=TRUE)
 save_file(save_directory,data_combine)
 #A_2
 directory <- system.file("data_ext","data_raw","A_2_diver",package="moveworkflow", mustWork=TRUE)
-feature_file <- type_files("CSV")
 data_combine <- combine_files(directory, "CSV") %>% 
   dplyr::select(1:4) %>% 
   dplyr::rename_with(~feature_file$col_name, everything()) %>% 
   dplyr::distinct(date_time, .keep_all = TRUE) %>% 
   dplyr::arrange(date_time)
-save_directory <-system.file("data_ext","data_compile","diver",package="moveworkflow", mustWork=TRUE)
 save_file(save_directory,data_combine)
 #A_3
 directory <- system.file("data_ext","data_raw","A_3_diver",package="moveworkflow", mustWork=TRUE)
-feature_file <- type_files("CSV")
 data_combine <- combine_files(directory, "CSV") %>% 
   dplyr::select(1:4) %>% 
   dplyr::rename_with(~feature_file$col_name, everything()) %>% 
   dplyr::distinct(date_time, .keep_all = TRUE) %>% 
   dplyr::arrange(date_time)
-save_directory <-system.file("data_ext","data_compile","diver",package="moveworkflow", mustWork=TRUE)
 save_file(save_directory,data_combine)
 #N_A
 directory <- system.file("data_ext","data_raw","N_A_diver",package="moveworkflow", mustWork=TRUE)
-feature_file <- type_files("CSV")
 data_combine <- combine_files(directory, "CSV") %>% 
   dplyr::select(1:4) %>% 
   dplyr::rename_with(~feature_file$col_name, everything()) %>% 
   dplyr::distinct(date_time, .keep_all = TRUE) %>% 
   dplyr::arrange(date_time)
-save_directory <-system.file("data_ext","data_compile","diver",package="moveworkflow", mustWork=TRUE)
 save_file(save_directory,data_combine)
 #N_F
 directory <- system.file("data_ext","data_raw","N_F_diver",package="moveworkflow", mustWork=TRUE)
-feature_file <- type_files("CSV")
 data_combine <- combine_files(directory, "CSV") %>% 
   dplyr::select(1:4) %>% 
   dplyr::rename_with(~feature_file$col_name, everything()) %>% 
   dplyr::distinct(date_time, .keep_all = TRUE) %>% 
   dplyr::arrange(date_time)
-save_directory <-system.file("data_ext","data_compile","diver",package="moveworkflow", mustWork=TRUE)
 save_file(save_directory,data_combine)
 #Baro_amboise
 directory <- system.file("data_ext","data_raw","Baro_amboise",package="moveworkflow", mustWork=TRUE)
-feature_file <- type_files("CSV")
 data_combine <- combine_files(directory, "CSV") %>% 
   dplyr::select(1:4) %>% 
   dplyr::rename_with(~feature_file$col_name, everything()) %>% 
   dplyr::distinct(date_time, .keep_all = TRUE) %>% 
   dplyr::arrange(date_time)
-save_directory <-system.file("data_ext","data_compile","diver",package="moveworkflow", mustWork=TRUE)
 save_file(save_directory,data_combine)
 #Baro_noizay
 directory <- system.file("data_ext","data_raw","Baro_noizay",package="moveworkflow", mustWork=TRUE)
-feature_file <- type_files("CSV")
 data_combine <- combine_files(directory, "CSV") %>% 
   dplyr::select(1:4) %>% 
   dplyr::rename_with(~feature_file$col_name, everything()) %>% 
   dplyr::distinct(date_time, .keep_all = TRUE) %>% 
   dplyr::arrange(date_time)
-save_directory <-system.file("data_ext","data_compile","diver",package="moveworkflow", mustWork=TRUE)
 save_file(save_directory,data_combine)
 ##Compiled all
 directory <- system.file("data_ext","data_compile","diver",package="moveworkflow", mustWork=TRUE)
-type_file <- "csv"
 feature_file <- type_files("csv")
 col_name <- c("date_time", "level_cm", "id_sensor", "id_plot")
 data_combine <- combine_files(directory, "csv") %>% 
@@ -112,26 +99,66 @@ save_file(save_directory,data_combine)
 
 ``` {r eval= FALSE}
 ## Combined tipping
+feature_file <- type_files("txt")
+save_directory <-system.file("data_ext","data_compile","tipping",package="moveworkflow", mustWork=TRUE)
 #A_1
 directory <- system.file("data_ext","data_raw","A_1_tipping",package="moveworkflow", mustWork=TRUE)
-feature_file <- type_files("CSV")
-combine_files(directory, "CSV")
+data_combine <- combine_files(directory, "txt")%>% 
+  dplyr::select(1:3,id_file) %>% 
+  dplyr::rename_with(~feature_file$col_name, everything()) %>%
+  dplyr::select(-row_name) %>% 
+  dplyr::mutate(value = as.numeric(gsub(",","",value))) %>%
+  base::subset(!is.na(value)) %>% 
+  dplyr::arrange(date_time)
+save_file(save_directory,data_combine)
 #A_2
 directory <- system.file("data_ext","data_raw","A_2_tipping",package="moveworkflow", mustWork=TRUE)
-feature_file <- type_files("CSV")
-combine_files(directory, "CSV")
+data_combine <- combine_files(directory, "txt")%>% 
+  dplyr::select(1:3,id_file) %>% 
+  dplyr::rename_with(~feature_file$col_name, everything()) %>%
+  dplyr::select(-row_name) %>% 
+  dplyr::mutate(value = as.numeric(gsub(",","",value))) %>%
+  base::subset(!is.na(value)) %>% 
+  dplyr::arrange(date_time)
+save_file(save_directory,data_combine)
 #A_3
 directory <- system.file("data_ext","data_raw","A_3_tipping",package="moveworkflow", mustWork=TRUE)
-feature_file <- type_files("CSV")
-combine_files(directory, "CSV")
+data_combine <- combine_files(directory, "txt")%>% 
+  dplyr::select(1:3,id_file) %>% 
+  dplyr::rename_with(~feature_file$col_name, everything()) %>%
+  dplyr::select(-row_name) %>% 
+  dplyr::mutate(value = as.numeric(gsub(",","",value))) %>%
+  base::subset(!is.na(value)) %>% 
+  dplyr::arrange(date_time)
+save_file(save_directory,data_combine)
 #N_A
 directory <- system.file("data_ext","data_raw","N_A_tipping",package="moveworkflow", mustWork=TRUE)
-feature_file <- type_files("CSV")
-combine_files(directory, "CSV")
+data_combine <- combine_files(directory, "txt")%>% 
+  dplyr::select(1:3,id_file) %>% 
+  dplyr::rename_with(~feature_file$col_name, everything()) %>%
+  dplyr::select(-row_name) %>% 
+  dplyr::mutate(value = as.numeric(gsub(",","",value))) %>%
+  base::subset(!is.na(value)) %>% 
+  dplyr::arrange(date_time)
+save_file(save_directory,data_combine)
 #N_F
 directory <- system.file("data_ext","data_raw","N_F_tipping",package="moveworkflow", mustWork=TRUE)
-feature_file <- type_files("CSV")
-combine_files(directory, "CSV")
+data_combine <- combine_files(directory, "txt")%>% 
+  dplyr::select(1:3,id_file) %>% 
+  dplyr::rename_with(~feature_file$col_name, everything()) %>%
+  dplyr::select(-row_name) %>% 
+  dplyr::mutate(value = as.numeric(gsub(",","",value))) %>%
+  base::subset(!is.na(value)) %>% 
+  dplyr::arrange(date_time)
+save_file(save_directory,data_combine)
 ##Compiled all
+directory <- system.file("data_ext","data_compile","tipping",package="moveworkflow", mustWork=TRUE)
+feature_file <- type_files("csv")
+col_name <- c("date_time", "value", "id_sensor", "id_plot")
+data_combine <- combine_files(directory, "csv") %>% 
+  dplyr::rename_with(~col_name, everything()) %>% 
+  dplyr::arrange(date_time)
+save_directory <-system.file("data_ext","data_compile",package="moveworkflow", mustWork=TRUE)
+save_file(save_directory,data_combine)
 ```
 
