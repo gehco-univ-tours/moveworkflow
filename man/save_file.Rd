@@ -5,12 +5,16 @@
 \title{save_file
 a function to save dataframe in csv with correct features}
 \usage{
-save_file(save_directory, data_frame)
+save_file(save_directory, data_frame, date_time, name_file)
 }
 \arguments{
 \item{save_directory}{a folder directory}
 
 \item{data_frame}{the data frame to save}
+
+\item{date_time}{a vector with date_time colnames}
+
+\item{name_file}{the name of the file to save}
 }
 \value{
 a .csv
