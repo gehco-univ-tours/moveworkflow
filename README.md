@@ -138,4 +138,25 @@ for (i in name_plot){
   plot_to_select(i)
 }
 ## Cut tipping
+name_plot <- c("A_1","A_2","A_3","N_A","N_F")
+directory <- system.file("data_ext","data_compile","tipping_combine.csv",package="moveworkflow", mustWork=TRUE)
+MIT <- lubridate::hours(6)
+for (i in name_plot){
+data_frame <- read_file(directory) %>%
+  subset(id_plot == i)
+data_cut <- cut_data(data_frame, MIT) %>% 
+  dplyr::rowwise() %>%
+  mutate(value = sum(!is.na(dplyr::c_across(c(-date_begin,-date_end,-id_event,-value))))) %>%
+  dplyr::ungroup() %>% 
+  select(date_begin,date_end,id_event,value)
+save_directory <- system.file("data_ext","data_correct","tipping",package="moveworkflow", mustWork=TRUE)
+  name_file <- paste(i,"correct.csv",sep="_")
+  save_file(save_directory,data_cut,c("date_begin","date_end"),name_file)
+}
+
+##Compil tipping
+directory <- system.file("data_ext","data_correct","tipping",package="moveworkflow", mustWork=TRUE)
+feature_file <- type_files("csv")
+feature_file[["name_datetime"]] <- "date_begin"
+data_combine <- combine_files(directory,"csv")
 ```
