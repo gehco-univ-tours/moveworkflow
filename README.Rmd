@@ -93,11 +93,12 @@ name_plot <- c("A_1","A_2","A_3","N_A","N_F")
 for (i in name_plot){
   data_diver <- diver_correct(i)
   save_directory <- system.file("data_ext","data_correct","diver",package="moveworkflow", mustWork=TRUE)
-  name_file <- paste(i,"correct.csv",sep="_")
+  name_file <- paste(i,"diver_correct.csv",sep="_")
   save_file(save_directory,data_diver,"date_time",name_file)
 }
 directory <- system.file("data_ext","data_correct","diver",package="moveworkflow",mustWork=TRUE)
-data_combine <- combine_files(directory, "csv")
+data_combine <- combine_files(directory, "csv") %>% 
+  dplyr::select(-id_file)
 save_directory <- system.file("data_ext","data_correct",package="moveworkflow",mustWork=TRUE)
 name_file <- paste(basename(directory),"_correct.csv",sep="")
 save_file(save_directory,data_combine,date_time,name_file)
@@ -114,7 +115,7 @@ data_combine <- combine_files(directory, "txt") %>%
     dplyr::select(-row_name,-sum) %>% 
     tidyr::drop_na(rain_mm) %>% 
     dplyr::arrange(date_time)
-name_file <- paste(basename(directory),"_rain.csv",sep="")
+name_file <- paste(basename(directory),"pluviometrie","_compile.csv",sep="")
 save_directory <-system.file("data_ext","data_compile","pluviometrie",package="moveworkflow", mustWork=TRUE)
 save_file(save_directory,data_combine,"date_time",name_file)
 
@@ -128,7 +129,7 @@ data_rain <- read_file(directory) %>%
   subset(date_time >= "2024-04-01 00:00:00") %>% 
   tidyr::drop_na(rain_mm) %>% 
   dplyr::arrange(date_time)
-name_file <- paste(basename(directory),sep="")
+name_file <- paste("amboise","pluviometrie","_compile.csv",sep="")
 save_directory <-system.file("data_ext","data_compile","pluviometrie",package="moveworkflow", mustWork=TRUE)
 save_file(save_directory,data_rain,"date_time",name_file)
 
@@ -136,7 +137,7 @@ save_file(save_directory,data_rain,"date_time",name_file)
 directory <-system.file("data_ext","data_compile","pluviometrie",package="moveworkflow", mustWork=TRUE)
 feature_file <- type_files("csv")
 data_combine <- combine_files(directory, "csv") %>% 
-  dplyr::mutate(id_file = stringr::str_remove(id_file, "_rain\\.csv$")) %>% 
+  dplyr::mutate(id_file = stringr::str_remove(id_file, "_pluviometrie")) %>% 
   dplyr::rename("id_site"=id_file)
 name_file <- paste(basename(directory),"_combine.csv",sep="")
 save_directory <-system.file("data_ext","data_compile",package="moveworkflow", mustWork=TRUE)
@@ -153,6 +154,8 @@ for (i in name_plot){
 name_plot <- c("A_1","A_2","A_3","N_A","N_F")
 directory <- system.file("data_ext","data_compile","tipping_combine.csv",package="moveworkflow", mustWork=TRUE)
 MIT <- lubridate::hours(6)
+feature_ruisselometre <- read_file(system.file("data_ext","data_raw","other_data","features_ruisselometre.csv",package="moveworkflow", mustWork=TRUE))
+feature_sensor <- read_file(system.file("data_ext","data_raw","other_data","features_sensor.csv",package="moveworkflow", mustWork=TRUE))
 for (i in name_plot){
 data_frame <- read_file(directory) %>%
   subset(id_plot == i)
@@ -160,15 +163,64 @@ data_cut <- cut_data(data_frame, MIT) %>%
   dplyr::rowwise() %>%
   mutate(value = sum(!is.na(dplyr::c_across(c(-date_begin,-date_end,-id_event,-value))))) %>%
   dplyr::ungroup() %>% 
-  select(date_begin,date_end,id_event,value)
+  mutate(runoff_l = (value * select_feature(feature_sensor,"id_sensor","value",select_feature(feature_ruisselometre,"id_ruisselometre","id_tipping",i)))/1000)%>% 
+  select(date_begin,date_end,id_event,runoff_l) 
 save_directory <- system.file("data_ext","data_correct","tipping",package="moveworkflow", mustWork=TRUE)
-  name_file <- paste(i,"correct.csv",sep="_")
+  name_file <- paste(i,"tipping_correct.csv",sep="_")
   save_file(save_directory,data_cut,c("date_begin","date_end"),name_file)
 }
 
-##Compil tipping
+##Compil tipping to complet runoff event
 directory <- system.file("data_ext","data_correct","tipping",package="moveworkflow", mustWork=TRUE)
 feature_file <- type_files("csv")
 feature_file[["name_datetime"]] <- "date_begin"
-data_combine <- combine_files(directory,"csv")
+data_combine <- combine_files(directory,"csv") %>% 
+  mutate(date_end = ymd_hms(date_end)) %>% 
+  subset(runoff_l>30) %>% 
+  rename(id_plot=id_file)
+save_directory <- system.file("data_ext","data_correct",package="moveworkflow", mustWork=TRUE)
+name_file <- paste("tipping","correct.csv",sep="_")
+save_file(save_directory,data_combine,c("date_begin","date_end"),name_file)
+```
+
+``` {r eval= FALSE}
+## Cut pluviometrie
+name_plot <- c("amboise","noizay")
+directory <- system.file("data_ext","data_compile","pluviometrie_combine.csv",package="moveworkflow", mustWork=TRUE)
+MIT <- lubridate::hours(6)
+for (i in name_plot){
+  if(i == "amboise"){
+    TB2V <- lubridate::minutes(6)
+  }else{
+    TB2V <- lubridate::minutes(5)
+  }
+data_frame <- read_file(directory) %>%
+  subset(id_site == i)
+data_cut <- cut_data(data_frame, MIT) %>%
+  mutate(date_end = date_end-MIT+TB2V) %>% 
+  dplyr::rowwise() %>%
+  mutate(rain_mm = sum(!is.na(dplyr::c_across(c(-date_begin,-date_end,-id_event,-value))) & dplyr::c_across(c(-date_begin,-date_end,-id_event,-value))>0)*0.2) %>%
+  dplyr::ungroup() %>%
+  select(date_begin,date_end,id_event,rain_mm)
+save_directory <- system.file("data_ext","data_correct","pluviometrie",package="moveworkflow", mustWork=TRUE)
+  name_file <- paste(i,basename(save_directory),"correct.csv",sep="_")
+  save_file(save_directory,data_cut,c("date_begin","date_end"),name_file)
+}
+
+##Compil pluviometrie correct
+directory <- system.file("data_ext","data_correct","pluviometrie",package="moveworkflow", mustWork=TRUE)
+feature_file <- type_files("csv")
+feature_file[["name_datetime"]] <- "date_begin"
+data_combine <- combine_files(directory,"csv") %>% 
+  mutate(date_end = ymd_hms(date_end)) %>% 
+  dplyr::mutate(id_file = stringr::str_remove(id_file, "_pluviometrie")) %>% 
+  rename(id_site=id_file)
+save_directory <- system.file("data_ext","data_correct",package="moveworkflow", mustWork=TRUE)
+name_file <- paste("pluviometrie","correct.csv",sep="_")
+save_file(save_directory,data_combine,c("date_begin","date_end"),name_file)
+```
+
+``` {r eval= FALSE}
+## Display plot and select periode
+
 ```
