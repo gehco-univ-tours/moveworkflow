@@ -3,16 +3,16 @@
 \name{select_feature}
 \alias{select_feature}
 \title{select_feature
-a function select a features with a match}
+a function to select a features with a match}
 \usage{
 select_feature(data_frame, select_col, match_col, feature)
 }
 \arguments{
 \item{data_frame}{name of the data_frame}
 
-\item{select_col}{name of colonne where is the feature}
+\item{select_col}{name of column where is the feature}
 
-\item{match_col}{name of colonne to match}
+\item{match_col}{name of column to match}
 
 \item{feature}{name of the feature to match}
 }
@@ -21,5 +21,5 @@ a value
 }
 \description{
 select_feature
-a function select a features with a match
+a function to select a features with a match
 }

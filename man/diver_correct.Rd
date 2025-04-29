@@ -3,17 +3,17 @@
 \name{diver_correct}
 \alias{diver_correct}
 \title{diver_correct
-a function to correct dievr level, with their baro_diver}
+a function to correct diver data, with their baro_diver data}
 \usage{
 diver_correct(name_plot)
 }
 \arguments{
-\item{name_plot}{a name plot to correct}
+\item{name_plot}{name plot to correct}
 }
 \value{
 a data_frame
 }
 \description{
 diver_correct
-a function to correct dievr level, with their baro_diver
+a function to correct diver data, with their baro_diver data
 }

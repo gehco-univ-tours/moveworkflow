@@ -3,19 +3,19 @@
 \name{type_files}
 \alias{type_files}
 \title{type_files
-a function which allows to set preset parameters when download rowdataframe}
+a function which allows to preset some parameters for a dataframe download}
 \usage{
 type_files(type_file)
 }
 \arguments{
-\item{type_file}{two choice, "txt" or "CSV"}
+\item{type_file}{Three choices : "txt" or "CSV" or "csv"}
 }
 \value{
 a list of preset files parameters
 }
 \description{
 type_files
-a function which allows to set preset parameters when download rowdataframe
+a function which allows to preset some parameters for a dataframe download
 }
 \examples{
 file <- "txt"

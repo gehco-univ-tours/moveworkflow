@@ -3,19 +3,19 @@
 \name{combine_files}
 \alias{combine_files}
 \title{Combine_files
-a function witch combine dataframes with same setting}
+a function which combine dataframes with same setting}
 \usage{
 combine_files(directory, type_file)
 }
 \arguments{
-\item{directory}{a directory with files}
+\item{directory}{a directory with just files to combine}
 
-\item{type_file}{the end of files (ex .CSV or .txt)}
+\item{type_file}{type's files (ex .CSV or .txt)}
 }
 \value{
 a dataframe of combined files
 }
 \description{
 Combine_files
-a function witch combine dataframes with same setting
+a function which combine dataframes with same setting
 }

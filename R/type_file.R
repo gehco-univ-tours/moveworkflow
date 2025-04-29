@@ -1,7 +1,7 @@
 #' type_files
-#' a function which allows to set preset parameters when download rowdataframe
+#' a function which allows to preset some parameters for a dataframe download
 #'
-#' @param type_file two choice, "txt" or "CSV"
+#' @param type_file Three choices : "txt" or "CSV" or "csv"
 #'
 #' @return a list of preset files parameters
 #' @export
@@ -25,7 +25,7 @@ type_files <- function(type_file){
     separator <- ";"
     skiprows_max <- 1
     last_row <- 0
-    decimal <- "."
+    decimal <- ","
     encoding <- "latin1"
     name_datetime <- "Date.Heure..GMT.01.00"
     col_name <- c("row_name", "date_time", "value","id_sensor")

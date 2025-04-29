@@ -5,15 +5,15 @@
 \title{cut_data
 a function to cut tipping data into event}
 \usage{
-cut_data(data_frame, MTI)
+cut_data(data_frame, MIT)
 }
 \arguments{
 \item{data_frame}{to data frame to cut}
 
-\item{MTI}{a duration corresponding to minimum time inter-event}
+\item{MIT}{a duration corresponding to minimum time inter-event}
 }
 \value{
-a raw event data_frame
+the input data frame with event and a data frame of event
 }
 \description{
 cut_data

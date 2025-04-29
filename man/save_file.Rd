@@ -3,7 +3,7 @@
 \name{save_file}
 \alias{save_file}
 \title{save_file
-a function to save dataframe in csv with correct features}
+a function to save a dataframe in csv with project features}
 \usage{
 save_file(save_directory, data_frame, date_time, name_file)
 }
@@ -12,7 +12,7 @@ save_file(save_directory, data_frame, date_time, name_file)
 
 \item{data_frame}{the data frame to save}
 
-\item{date_time}{a vector with date_time colnames}
+\item{date_time}{a character vector with POSIX.CT column names}
 
 \item{name_file}{the name of the file to save}
 }
@@ -21,5 +21,5 @@ a .csv
 }
 \description{
 save_file
-a function to save dataframe in csv with correct features
+a function to save a dataframe in csv with project features
 }

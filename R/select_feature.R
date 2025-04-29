@@ -1,8 +1,8 @@
 #' select_feature
-#' a function select a features with a match
+#' a function to select a features with a match
 #'
-#' @param select_col name of colonne where is the feature
-#' @param match_col name of colonne to match
+#' @param select_col name of column where is the feature
+#' @param match_col name of column to match
 #' @param feature name of the feature to match
 #' @param data_frame name of the data_frame
 #' @importFrom dplyr mutate
