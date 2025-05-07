@@ -2,12 +2,13 @@
 #' a function to add a rectangle to a plotly
 #'
 #' @param data_frame data_frame to add rectangle
-#' @param max_x hight of rectangle
+#' @param max_y hight of rectangle
+#' @param min_y the bottom of rectangle
 #'
 #' @return a list to add to plotly
 #' @export
 #'
-plot_rectangle <- function (data_frame, max_x){
+plot_rectangle <- function (data_frame, min_y, max_y){
   l=0
   list_list <- list()
   for (i in 1:length(rownames(data_frame))){
@@ -16,8 +17,8 @@ plot_rectangle <- function (data_frame, max_x){
     x1 <- data_frame$date_end[i]
     k<-list(
       type = "rect",
-      y0 = 0,
-      y1 = max_x,
+      y0 = min_y,
+      y1 = max_y,
       fillcolor=color,
       line=list(color=color),
       x0 = x0,

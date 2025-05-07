@@ -89,16 +89,16 @@ data_rain <- read_file(directory) %>% #charge data rain
   subset(id_site == "amboise") %>%
   mutate(date_time = ymd_hms(date_time)) %>%
   dplyr::group_by(date_time=lubridate::floor_date(date_time, lubridate::hours(1))) %>% #group_by hours
-  dplyr::summarise(sum(rain_mm)) %>%
+  dplyr::summarise(sum(v_rain_mm)) %>%
   dplyr::rename_with(~c("date_time","rain_mm"), everything()) %>%
   left_join(read_file(directory) %>% #add event number
               subset(id_site == "amboise") %>%
               mutate(date_time = ymd_hms(date_time)) %>%
-              select(event,date_time),
+              select(id_event,date_time),
             by = "date_time")
 directory <- system.file("data_ext","data_raw","other_data","runoff_event.csv", package="moveworkflow", mustWork=TRUE)
 data_runoff_ev <- read_file(directory) %>%
-  mutate(begin_diver = lubridate::ymd_hm(begin_diver), debut_tipping = lubridate::ymd_hm(debut_tipping))
+  mutate(begin_r = lubridate::ymd_hm(begin_r))
 for (i in 1:length(rownames(data_runoff_ev))){
   data_runoff_ev$date_begin[i] <- as.character(max(data_runoff_ev$begin_diver[i], data_runoff_ev$debut_tipping[i], na.rm=TRUE))
 }

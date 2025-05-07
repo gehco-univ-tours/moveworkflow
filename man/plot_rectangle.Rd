@@ -5,12 +5,14 @@
 \title{plot_rectangle
 a function to add a rectangle to a plotly}
 \usage{
-plot_rectangle(data_frame, max_x)
+plot_rectangle(data_frame, min_y, max_y)
 }
 \arguments{
 \item{data_frame}{data_frame to add rectangle}
 
-\item{max_x}{hight of rectangle}
+\item{min_y}{the bottom of rectangle}
+
+\item{max_y}{hight of rectangle}
 }
 \value{
 a list to add to plotly

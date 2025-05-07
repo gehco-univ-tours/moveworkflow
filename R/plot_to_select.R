@@ -17,7 +17,7 @@ plot_to_select <- function(name_plot){
   data_diver <- read_file(directory) %>%
     subset(id_plot == name_plot) %>%
     mutate(date_time = ymd_hms(date_time)) #charge data diver
-  name_site <- select_feature(data_ruisselometre,"id_ruisselometre","site",name_plot)
+  name_site <- select_feature(data_ruisselometre,"id_plot","site",name_plot)
   directory <- system.file("data_ext","data_correct","rain_correct.csv",package="moveworkflow", mustWork=TRUE)
   data_pluvio <- read_file(directory) %>%
     subset(id_site == name_site) %>%
@@ -27,7 +27,7 @@ plot_to_select <- function(name_plot){
               # black color
               line = list(color = 'rgba(0, 0, 0, 0.6)')
     ) %>% #add rain
-    add_bars(data = data_pluvio, x = ~date_time, y = ~rain_mm, name = 'Rain_mm', yaxis = 'y2',
+    add_bars(data = data_pluvio, x = ~date_time, y = ~v_rain_mm, name = 'Rain_mm', yaxis = 'y2',
              marker = list(
                # dark blue color
                color = 'rgba(0, 0, 255, 0.6)'),
