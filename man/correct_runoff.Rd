@@ -3,7 +3,7 @@
 \name{correct_runoff}
 \alias{correct_runoff}
 \title{correct_runoff
-a function to combined runoff event or rain event}
+a function to combined runoff event}
 \usage{
 correct_runoff(data, plot_name, num_event)
 }
@@ -15,9 +15,9 @@ correct_runoff(data, plot_name, num_event)
 \item{plot_mane}{name of the plot to correct}
 }
 \value{
-a data_frame with news lines
+a data_frame with combined lines
 }
 \description{
 correct_runoff
-a function to combined runoff event or rain event
+a function to combined runoff event
 }

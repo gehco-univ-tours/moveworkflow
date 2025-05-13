@@ -1,11 +1,11 @@
 #' correct_runoff
-#' a function to combined runoff event or rain event
+#' a function to combined runoff event
 #'
 #' @param plot_mane name of the plot to correct
 #' @param num_event a character vector of the id_event to combined
 #' @param data the data frame to correct
 #'
-#' @return a data_frame with news lines
+#' @return a data_frame with combined lines
 #' @export
 #'
 correct_runoff <- function(data, plot_name, num_event){

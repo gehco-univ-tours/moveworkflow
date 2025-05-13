@@ -471,10 +471,12 @@ data_runoff <- data_runoff %>%
   mutate(drainage_h = as.numeric(difftime(end_r, date_end_rain, units='hours'))) %>% 
   arrange(begin_r) %>% 
   arrange(id_plot)
+## second correction
+data_runoff <- second_correct(data_runoff)
 ## save file
 save_directory <- system.file("data_ext","data_correct",package="moveworkflow",mustWork=TRUE)
 name_file <- paste("runoff_measured.csv",sep="")
-save_file(save_directory,data_runoff,c("begin_r","end_r"),name_file) #save with name = name_file
+save_file(save_directory,data_runoff,c("begin_r","end_r","date_begin_rain","date_end_rain"),name_file) #save with name = name_file
 rm(list = ls())
 ```
 
@@ -535,18 +537,27 @@ data_runoff <- data_runoff %>%
 save_directory <- system.file("data_ext","data_output",package="moveworkflow",mustWork=TRUE)
 name_file <- paste("runoff.csv",sep="")
 save_file(save_directory,data_runoff,c(),name_file) #save with
-```
-
-``` r
-## sumup in days
-date = seq.Date(ymd("2024_04_01"), ymd("2025_03_31"), by = "days")
-data_days <- data.frame(date_time = date)
 rm(list=ls())
 ```
 
 ``` r
-## calculate runoff event's flux
-directory <- system.file("data_ext","data_output","runoff.csv",package="moveworkflow",mustWork=TRUE)
-data_runoff <- read_file(directory) %>% 
-  mutate(v_runoff_mm = CR_new*v_rain_mm)
+## sumup in days
+## charge runoff file
+save_directory <- system.file("data_ext","data_output","daily_data",package="moveworkflow",mustWork=TRUE)
+name_plot <- c("A_1","A_2","A_3","N_A","N_F") 
+for (i in name_plot){
+  data_daily <- data_in_days(i)
+  name_file <- paste(i,"daily_data.csv",sep="_")
+  save_file(save_directory,data_daily,"date_time",name_file) #save with name = name_file
+}
+##Compiled all combine_diver
+directory <- system.file("data_ext","data_output","daily_data",package="moveworkflow", mustWork=TRUE) #set folder directory to compiled
+feature_file <- type_files("csv") #set file characteristic
+data_combine <- combine_files(directory, "csv") %>% 
+  dplyr::rename(id_plot = id_file) %>% 
+  dplyr::arrange(id_plot)
+save_directory <-system.file("data_ext","data_output",package="moveworkflow", mustWork=TRUE)
+name_file <- paste(basename(directory),"_combine.csv",sep="")
+save_file(save_directory,data_combine,"date_time",name_file) #save with name = name_file
+rm(list = ls())
 ```
