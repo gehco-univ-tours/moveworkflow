@@ -1,0 +1,20 @@
+#### Projet MOVE ####
+
+moveworkflow contient tout les fichiers permettant de créer un package R pour le traitement des données MOVE.
+Le package, déposé sur github, permet d'avoir un suivie sur les modifications effectuées et de faciliter la transmission du code :
+https://github.com/gehco-univ-tours/moveworkflow 
+
+Dans le dossier R, on retrouve toutes les fonctions crées pour le traitement des données et utilisées dans le workflow. 
+Le dossier inst, stock les données brutes, les fichiers créés durant le workflow, ainsi que les fichiers de sortie du workflow.
+
+Le fichier README.Rmd est ouvrable sur R. Pour l'ouvrir il faut :
+- avoir installé R et Rstudio
+- Ouvrir le fichier moveworkflow.Rproj, qui ouvrira un le projet moveworkflow avec déjà toutes les dépendances de chargées. 
+OU se rendre sur le lien github, le fichier readme sera déjà affiché.
+
+Le fichier README.Rmd présente : 
+- comment installer le package
+- l'objectif de du workflow
+- ce qui n'a pas été effectué dans le workflow
+- où trouver l'oganigramme du workflow
+- comment à partir de données brutes, obtenir les fichiers de sorties

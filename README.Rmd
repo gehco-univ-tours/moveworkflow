@@ -41,7 +41,8 @@ for (i in name_diver){
     dplyr::select(1:4) %>% 
     dplyr::rename_with(~feature_file$col_name, everything()) %>%
     dplyr::distinct(date_time, .keep_all = TRUE) %>% 
-    dplyr::arrange(date_time)
+    dplyr::arrange(date_time) %>% 
+    filter(date_time < "2025-04-11 00:00:00")
   name_file <- paste(basename(directory),"_combine.csv",sep="")
   save_file(save_directory,data_combine,"date_time",name_file) #save with name = name_file
 }
@@ -103,6 +104,7 @@ data_combine <- combine_files(directory, "txt") %>%
     dplyr::rename_with(~col_name, everything()) %>% 
     dplyr::select(-row_name,-sum) %>% 
     mutate(v_rain_mm = as.numeric(v_rain_mm)) %>% 
+    subset(date_time < "2025-04-11 00:00:00") %>% 
     subset(!is.na(v_rain_mm)) %>% 
     dplyr::arrange(date_time)
 name_file <- paste(basename(directory),"_rain","_combine.csv",sep="")
@@ -117,6 +119,7 @@ data_rain <- read_file(directory) %>%
   dplyr::mutate(date_time = lubridate::ymd_hm(AAAAMMJJHHMN)+lubridate::hours(1), v_rain_mm=RR)%>% #add 1hours to transforme UTC_date_time in UTC+1_date_time
   dplyr::select(-AAAAMMJJHHMN, -RR) %>%
   subset(date_time >= "2024-04-11 00:00:00") %>% #select project period
+  subset(date_time < "2025-04-11 00:00:00") %>% 
   tidyr::drop_na(v_rain_mm) %>% 
   dplyr::arrange(date_time)
 name_file <- paste("amboise","_rain","_combine.csv",sep="")
@@ -271,10 +274,12 @@ rm(list = ls())
 
 ``` {r eval= FALSE}
 ## Display diver level to select runoff event
-name_plot <- c("N_A") #select name plot to display
+name_plot <- c("A_1","A_2","A_3","N_A","N_F") #select name plot to display
 for (i in name_plot){ #print a plot of level variation in time
+  dev.new()
   plot_to_select(i)
 } 
+
 ## Display tipping event to select runoff event
 for (i in name_plot){ #print a data frame, with tip runoff event
   directory <- system.file("data_ext","data_correct","tipping_ev.csv",package="moveworkflow", mustWork=TRUE)
@@ -449,6 +454,17 @@ data_runoff <- correct_runoff(data_runoff, "A_3","event_276")
 data_runoff <- correct_runoff(data_runoff, "A_3","event_293")
 data_runoff <- correct_runoff(data_runoff, "N_A","event_145")
 data_runoff <- correct_runoff(data_runoff, "N_F","event_89")
+data_runoff$precision_r[data_runoff$id_plot == "N_F" & data_runoff$id_rain_event == "event_89"] <- "medium"
+#when diver is hs, we can add 1m3 to runoff and put runoff in good
+# R17 in A_3
+data_runoff$v_runoff_l[data_runoff$id_plot == "A_3" & data_runoff$id_runoff_ev == "17"] <- data_runoff$v_runoff_l[data_runoff$id_plot == "A_3" & data_runoff$id_runoff_ev == "17"] + 840
+data_runoff$precision_r[data_runoff$id_plot == "A_3" & data_runoff$id_runoff_ev == "17"] <- "good"
+# R18 in N_F
+data_runoff$v_runoff_l[data_runoff$id_plot == "N_F" & data_runoff$id_runoff_ev == "18"] <- data_runoff$v_runoff_l[data_runoff$id_plot == "N_F" & data_runoff$id_runoff_ev == "18"] + 840
+data_runoff$precision_r[data_runoff$id_plot == "N_F" & data_runoff$id_runoff_ev == "18"] <- "good"
+# R22 in N_F
+data_runoff$v_runoff_l[data_runoff$id_plot == "N_F" & data_runoff$id_runoff_ev == "22"] <- data_runoff$v_runoff_l[data_runoff$id_plot == "N_F" & data_runoff$id_runoff_ev == "22"] + 840
+data_runoff$precision_r[data_runoff$id_plot == "N_F" & data_runoff$id_runoff_ev == "22"] <- "good"
 #calculate CR
 directory <- system.file("data_ext","data_raw","other_data","features_ruisselometre.csv", package="moveworkflow", mustWork=TRUE)
 data_ruisselometre <- read_file(directory)
@@ -483,7 +499,7 @@ data_runoff <- data_runoff %>%
   mutate(drainage_h = as.numeric(difftime(end_r, date_end_rain, units='hours'))) %>% 
   arrange(begin_r) %>% 
   arrange(id_plot)
-## second correction
+## second correction, add rain to event. The CR will be litteler
 data_runoff <- second_correct(data_runoff)
 ## save file
 save_directory <- system.file("data_ext","data_correct",package="moveworkflow",mustWork=TRUE)
@@ -494,9 +510,9 @@ rm(list = ls())
 
 ```{r eval= FALSE}
 ##plot to zoom on events
-name_plot = c("A_3")
+name_plot = c("A_1","A_2","A_3","N_A","N_F")
 for (i in name_plot){
-plot <- plot_to_see(i, lubridate::ymd("2025_01_28"), lubridate::ymd("2025_01_29"))
+plot <- plot_to_see(i, lubridate::ymd("2024_04_11"), lubridate::ymd("2025_04_11"))
 print(plot)
 }
 rm(list=ls())
@@ -504,7 +520,11 @@ rm(list=ls())
 
 ```{r eval= FALSE}
 ## put yes / no / maybe, to compare rain events
-data <- type_rain("N_F")
+plot_name <- c("N_F","A_1","A_2","A_3","N_A")
+for(i in plot_name){
+  data <- type_rain(i)
+}
+
 
 ```
 
@@ -515,9 +535,17 @@ data_runoff <- read_file(directory) %>%   #charge runoff file
   subset(note != "runoff_low")
 directory <- system.file("data_ext","data_raw","other_data","features_ruisselometre.csv", package="moveworkflow", mustWork=TRUE)
 data_ruisselometre <- read_file(directory)
+## add good h_run_off_min
+for (i in 1:length(rownames(data_runoff))){
+  data_runoff$min_h_runoff_mm[i] <- max(data_runoff$min_h_runoff_mm[i],data_runoff$old_min_runoff[i], na.rm=TRUE)
+}
+data_runoff <- data_runoff %>% 
+  select(-old_min_runoff)
 ## calculate volume in liter
 for(i in 1:length(rownames(data_runoff))){
-data_runoff$v_runoff_l[i] <- data_runoff$new_h_runoff_mm[i]* 
+data_runoff$v_min_runoff_l[i] <- data_runoff$min_h_runoff_mm[i]* 
+      select_feature(data_ruisselometre, "id_plot", "area_plot_m2", data_runoff$id_plot[i])
+data_runoff$v_max_runoff_l[i] <- data_runoff$max_h_runoff_mm[i]* 
       select_feature(data_ruisselometre, "id_plot", "area_plot_m2", data_runoff$id_plot[i])
 }
 ## left join with data labo
@@ -528,32 +556,21 @@ data_runoff <- data_runoff %>%
     data_labo %>% 
       select(id_sampling, id_plot, c_MES_g_l, mass_eavy_load_g, c_cu_total_ppb, c_cu_dissolved_ppb, inc_abs_MES, inc_rel_MES, inc_abs_cu_total, inc_rel_cu_total, inc_abs_cu_dissolved, inc_rel_cu_dissolved),
   by = c("id_plot", "id_sampling"))
-## add columns to data runoff
-data_runoff <- add_column(data_runoff, c("mass_MES_kg_ha", "mass_cu_total_g_ha", "mass_cu_dissolved_g_ha"))
 ##calculate MES and CU
 for(i in 1:length(rownames(data_runoff))){
-  data_runoff$mass_MES_kg_ha[i] <- (((data_runoff$v_runoff_l[i]*data_runoff$c_MES_g_l[i])/1000)/select_feature(data_ruisselometre, "id_plot", "area_plot_m2", data_runoff$id_plot[i]))*10000
-  data_runoff$mass_cu_total_g_ha[i] <- ((((data_runoff$v_runoff_l[i]*data_runoff$c_cu_total_ppb[i])/1000)/select_feature(data_ruisselometre, "id_plot", "area_plot_m2", data_runoff$id_plot[i]))*10000)/1000
-  data_runoff$mass_cu_dissolved_g_ha[i] <- ((((data_runoff$v_runoff_l[i]*data_runoff$c_cu_dissolved_ppb[i])/1000)/select_feature(data_ruisselometre, "id_plot", "area_plot_m2", data_runoff$id_plot[i]))*10000)/1000
+  data_runoff$mass_min_MES_kg_ha[i] <- (((data_runoff$v_min_runoff_l[i]*data_runoff$c_MES_g_l[i])/1000)/select_feature(data_ruisselometre, "id_plot", "area_plot_m2", data_runoff$id_plot[i]))*10000 - ((((data_runoff$v_min_runoff_l[i]*data_runoff$c_MES_g_l[i])/1000)/select_feature(data_ruisselometre, "id_plot", "area_plot_m2", data_runoff$id_plot[i]))*10000)*(data_runoff$inc_rel_MES[i]/100)
+  data_runoff$mass_max_MES_kg_ha[i] <- (((data_runoff$v_max_runoff_l[i]*data_runoff$c_MES_g_l[i])/1000)/select_feature(data_ruisselometre, "id_plot", "area_plot_m2", data_runoff$id_plot[i]))*10000 + ((((data_runoff$v_max_runoff_l[i]*data_runoff$c_MES_g_l[i])/1000)/select_feature(data_ruisselometre, "id_plot", "area_plot_m2", data_runoff$id_plot[i]))*10000)*(data_runoff$inc_rel_MES[i]/100)
+  data_runoff$mass_min_cu_total_g_ha[i] <- ((((data_runoff$v_min_runoff_l[i]*data_runoff$c_cu_total_ppb[i])/1000)/select_feature(data_ruisselometre, "id_plot", "area_plot_m2", data_runoff$id_plot[i]))*10000)/1000 - (((((data_runoff$v_min_runoff_l[i]*data_runoff$c_cu_total_ppb[i])/1000)/select_feature(data_ruisselometre, "id_plot", "area_plot_m2", data_runoff$id_plot[i]))*10000)/1000)*(data_runoff$inc_rel_cu_total[i]/100)
+  data_runoff$mass_max_cu_total_g_ha[i] <- ((((data_runoff$v_max_runoff_l[i]*data_runoff$c_cu_total_ppb[i])/1000)/select_feature(data_ruisselometre, "id_plot", "area_plot_m2", data_runoff$id_plot[i]))*10000)/1000 + (((((data_runoff$v_max_runoff_l[i]*data_runoff$c_cu_total_ppb[i])/1000)/select_feature(data_ruisselometre, "id_plot", "area_plot_m2", data_runoff$id_plot[i]))*10000)/1000)*(data_runoff$inc_rel_cu_total[i]/100) 
+  data_runoff$mass_min_cu_dissolved_g_ha[i] <- ((((data_runoff$v_min_runoff_l[i]*data_runoff$c_cu_dissolved_ppb[i])/1000)/select_feature(data_ruisselometre, "id_plot", "area_plot_m2", data_runoff$id_plot[i]))*10000)/1000 - (((((data_runoff$v_min_runoff_l[i]*data_runoff$c_cu_dissolved_ppb[i])/1000)/select_feature(data_ruisselometre, "id_plot", "area_plot_m2", data_runoff$id_plot[i]))*10000)/1000)*(data_runoff$inc_rel_cu_dissolved[i]/100) 
+  data_runoff$mass_max_cu_dissolved_g_ha[i] <- ((((data_runoff$v_max_runoff_l[i]*data_runoff$c_cu_dissolved_ppb[i])/1000)/select_feature(data_ruisselometre, "id_plot", "area_plot_m2", data_runoff$id_plot[i]))*10000)/1000 + (((((data_runoff$v_max_runoff_l[i]*data_runoff$c_cu_dissolved_ppb[i])/1000)/select_feature(data_ruisselometre, "id_plot", "area_plot_m2", data_runoff$id_plot[i]))*10000)/1000)*(data_runoff$inc_rel_cu_dissolved[i]/100) 
 }
-data_runoff <- add_column(data_runoff, c("inc_rel_cr","inc_abs_v_runoff","inc_abs_mass_MES","inc_rel_mass_MES", "inc_abs_mass_cu_total", "inc_rel_mass_cu_total","inc_abs_mass_cu_dissolved", "inc_rel_mass_cu_dissolved"))
-data_runoff <- data_runoff %>% 
-  mutate(inc_rel_cr = (new_inc_abs_CR/new_CR)*100) %>% 
-  mutate(inc_abs_v_runoff = (inc_rel_cr/100)*v_runoff_l) %>% 
-  mutate(inc_abs_mass_MES = ((inc_abs_v_runoff/v_runoff_l) + (inc_rel_MES/100))*mass_MES_kg_ha) %>%
-  mutate(inc_rel_mass_MES = (inc_abs_mass_MES/mass_MES_kg_ha)*100) %>% 
-  mutate(inc_abs_mass_cu_total = ((inc_abs_v_runoff/v_runoff_l) + (inc_rel_cu_total/100))*mass_cu_total_g_ha) %>% 
-  mutate(inc_rel_mass_cu_total = (inc_abs_mass_cu_total/mass_cu_total_g_ha)*100) %>% 
-  mutate(inc_abs_mass_cu_dissolved = ((inc_abs_v_runoff/v_runoff_l) + (inc_rel_cu_dissolved/100))*mass_cu_dissolved_g_ha) %>% 
-  mutate(inc_rel_mass_cu_dissolved = (inc_abs_mass_cu_dissolved/mass_cu_total_g_ha)*100) 
 ## save file
 save_directory <- system.file("data_ext","data_output",package="moveworkflow",mustWork=TRUE)
 name_file <- paste("runoff.csv",sep="")
 save_file(save_directory,data_runoff,c(),name_file) #save with
 rm(list=ls())
 ```
-
-
 
 ```{r eval= FALSE}
 ## sumup in days
@@ -565,7 +582,7 @@ for (i in name_plot){
   name_file <- paste(i,"daily_data.csv",sep="_")
   save_file(save_directory,data_daily,"date_time",name_file) #save with name = name_file
 }
-##Compiled all combine_diver
+##Compiled all daily_data
 directory <- system.file("data_ext","data_output","daily_data",package="moveworkflow", mustWork=TRUE) #set folder directory to compiled
 feature_file <- type_files("csv") #set file characteristic
 data_combine <- combine_files(directory, "csv") %>% 

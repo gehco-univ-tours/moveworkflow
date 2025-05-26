@@ -31,6 +31,8 @@ data_rain_ev <- read_file(directory) %>%  #charge rain
 data_days <- data_days %>%
   left_join(data_rain_ev, by=c("date_time" = "date"))
 ##add v_runoff_mm
+names_col <- c("min_h_runoff_mm", "max_h_runoff_mm")
+for (i in names_col){
 directory <- system.file("data_ext","data_output","runoff.csv", package="moveworkflow", mustWork=TRUE) #set directory
 data_runoff <- read_file(directory) %>% #charge data_runoff
   subset(id_plot == plot_name) %>%
@@ -40,9 +42,12 @@ data_runoff <- read_file(directory) %>% #charge data_runoff
   mutate(date_end_rain = lubridate::dmy_hm(date_end_rain)) %>%
   mutate(date = date(ymd_hms(date_begin_rain))) %>%
   group_by(date) %>%
-  summarise(h_runoff_mm = sum(new_h_runoff_mm))
+  summarise(sum(.data[[i]]))
 data_days <- data_days %>%
   left_join(data_runoff, by=c("date_time" = "date"))
+}
+data_days <- data_days %>%
+  dplyr::rename_with(~names_col, .cols = c(3:4))
 ##add cu_input and TS
 directory <- system.file("data_ext","data_raw","other_data","data_ITK.csv", package="moveworkflow", mustWork=TRUE)
 data_ITK <- read_file(directory) %>%
@@ -60,10 +65,12 @@ data_ITK <- read_file(directory)%>%
   subset(TS!="")
 data_days <- data_days %>%
   left_join(data_ITK, by=c("date_time" = "date"))
+data_days <- data_days %>%
+  rename("TS_tassement"=TS)
 ##add flux : MES and CU
-names_col <- c("mass_MES_kg_ha", "mass_cu_total_g_ha", "mass_cu_dissolved_g_ha",
-               "inc_abs_v_runoff_mm", "inc_abs_mass_MES",
-               "inc_abs_mass_cu_total", "inc_abs_mass_cu_dissolved")
+names_col <- c("mass_min_MES_kg_ha", "mass_max_MES_kg_ha",
+               "mass_min_cu_total_g_ha", "mass_max_cu_total_g_ha",
+               "mass_min_cu_dissolved_g_ha", "mass_max_cu_dissolved_g_ha")
 for (i in names_col){
 directory <- system.file("data_ext","data_output","runoff.csv", package="moveworkflow", mustWork=TRUE) #set directory
 data_runoff <- read_file(directory) %>% #charge data_runoff
@@ -72,7 +79,6 @@ data_runoff <- read_file(directory) %>% #charge data_runoff
   mutate(end_r = lubridate::dmy_hm(end_r)) %>%
   mutate(date_begin_rain = lubridate::dmy_hm(date_begin_rain)) %>%
   mutate(date_end_rain = lubridate::dmy_hm(date_end_rain)) %>%
-  mutate(inc_abs_v_runoff_mm = new_h_rain_mm * (new_inc_abs_CR/100)) %>%
   mutate(date = date(ymd_hms(date_begin_rain))) %>%
   group_by(date) %>%
   summarise(sum(.data[[i]]))
@@ -80,6 +86,6 @@ data_days <- data_days %>%
   left_join(data_runoff, by=c("date_time" = "date"))
 }
 data_days <- data_days %>%
-  dplyr::rename_with(~names_col, .cols = c(6:12))
+  dplyr::rename_with(~names_col, .cols = c(7:12))
 return(data_days)
 }

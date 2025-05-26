@@ -67,7 +67,7 @@ type_rain <- function(plot){
     mutate(months = months(date_begin)) %>%
     mutate(date = lubridate::date(date_begin))
   ##save file
-  save_directory <- system.file("data_ext","data_output",package="moveworkflow",mustWork=TRUE)
+  save_directory <- system.file("data_ext","data_output","runoff_maybe",package="moveworkflow",mustWork=TRUE)
   name_file <- paste(plot,"_rain_event.csv",sep="")
   save_file(save_directory,data_rain_ev,c("date_begin","date_end"),name_file) #save with
   k <- ggplot(data=data_rain_ev, aes(x=runoff , y=h_rain_mm))+

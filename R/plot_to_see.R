@@ -46,7 +46,7 @@ plot_to_see <- function(name_plot, date_begin, date_end){
     subset(id_plot == name_plot) %>%
     mutate(date_begin = ymd_hm(date_begin), date_end = ymd_hm(date_end)) %>%
     left_join(data.frame(color = c("green","red","orange"), status = c("working", "not_working", "incomplet")), by="color")
-  directory <- system.file("data_ext","data_output","runoff.csv",package="moveworkflow", mustWork=TRUE)
+  directory <- system.file("data_ext","data_correct","runoff_measured.csv",package="moveworkflow", mustWork=TRUE)
   data_runoff <- read_file(directory) %>%
     subset(id_plot == name_plot) %>%
     select(begin_r, end_r) %>%

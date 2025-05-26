@@ -13,8 +13,7 @@ Imports:
     ggplot2,
     lubridate,
     magrittr,
-    plotly,
-    readr
+    plotly
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
