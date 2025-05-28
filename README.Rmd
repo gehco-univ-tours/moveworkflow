@@ -18,12 +18,29 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of moveworkflow is to ...
+The goal of moveworkflow is to produce a runoff event dataframe and a daily dataframe, from continues measures of rain, water level and occasional water sampling in a tank.
+The runoff event dataframe and the daily dataframe must include erosion and copper flow.  
+The package doesn't allows to generate flow below a daily step and it doesn't integrate tank's heavy load.
 
 ## Installation
 
-You can install the development version of moveworkflow from [GitHub](https://github.com/) with:
+You can install the development version of moveworkflow from [GitHub](https://github.com/) with: 
 
+```{r eval= FALSE}
+# install.packages("devtools")
+devtools::install_github("gehco-univ-tours/moveworkflow")
+```
+
+## Help
+
+If you need to understand how have to order your inst folder and to understand which step are use to pass to final data, you can check the schematic_moveworkflow.drawio file, by using : [draw.io] (https://app.diagrams.net/?src=about)
+
+! there isn't any example for function created in moveworkflow 
+
+Below you have the full script witch allow to produce the runoff event dataframe and the daily dataframe, for the MOVE_project
+
+
+## Workflow
 
 ```{r eval= FALSE}
 ## Set timezone system

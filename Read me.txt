@@ -10,11 +10,11 @@ Le dossier inst, stock les données brutes, les fichiers créés durant le workf
 Le fichier README.Rmd est ouvrable sur R. Pour l'ouvrir il faut :
 - avoir installé R et Rstudio
 - Ouvrir le fichier moveworkflow.Rproj, qui ouvrira un le projet moveworkflow avec déjà toutes les dépendances de chargées. 
-OU se rendre sur le lien github, le fichier readme sera déjà affiché.
+OU se rendre sur le lien github, le fichier README.Rmd sera déjà affiché.
 
 Le fichier README.Rmd présente : 
 - comment installer le package
-- l'objectif de du workflow
+- l'objectif de workflow
 - ce qui n'a pas été effectué dans le workflow
 - où trouver l'oganigramme du workflow
 - comment à partir de données brutes, obtenir les fichiers de sorties
